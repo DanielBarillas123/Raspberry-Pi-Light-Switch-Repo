@@ -1,8 +1,11 @@
 import explorerhat
-from gpiozero import LED
+from time import sleep
 
 def main():
-	print("Hello World!")
+	explorerhat.output.one.on()
+	sleep(2)
+	explorerhat.output.one.off()
+	
 
 
 if __name__ == "__main__":
