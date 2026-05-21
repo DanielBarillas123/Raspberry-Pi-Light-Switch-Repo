@@ -47,19 +47,27 @@ async def pair(host: str):
     print(f"Successfully paired with {data['version']}")
 
 # Set up the button press event handler
-async def on_button_press(channel, event):
+def on_button_press(channel, event):
     # Toggle the light on and off when the button is pressed
     if channel == 1 and event == "press":
         if device['current_state'] > 0:
-            await bridge.turn_off(device['device_id'])
+            asyncio.run(turn_off_light())
         else:
-            await bridge.turn_on(device['device_id'])
+            asyncio.run(turn_on_light())
     # Exit the program when the exit button is pressed also turns off the light
     elif channel == 4 and event == "press":
         explorerhat.output.one.off()
-        await bridge.close()
+        asyncio.run(close_bridge())
         exit()
 
+async def turn_on_light():
+    await bridge.turn_on(device['device_id'])
+
+async def turn_off_light():
+    await bridge.turn_off(device['device_id'])
+
+async def close_bridge():
+    await bridge.close()
 
 async def Enable_room_device():
     # Turn on the light to indicate that the program is running
@@ -101,4 +109,4 @@ if __name__ == "__main__":
     asyncio.run(Enable_room_device())
     # Set up the button press event handler and keep the program running to listen for button presses
     while True:
-        explorerhat.touch.pressed(asyncio.run(on_button_press))
+        explorerhat.touch.pressed(on_button_press))
