@@ -3,3 +3,4 @@ xdg
 zeroconf
 explorerhat
 asyncio
+click
