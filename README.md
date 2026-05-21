@@ -14,3 +14,7 @@ LED connected to 5V and output 1
 
 ## Controls
 There aren't many just button one on the explorer hat and button 4.
+
+## Reasources
+https://pypi.org/project/pylutron-caseta/#description
+here is the page to the package that I used just incase you are curious
