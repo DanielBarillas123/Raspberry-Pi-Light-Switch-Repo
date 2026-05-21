@@ -1,4 +1,4 @@
-#import explorerhat
+import explorerhat
 from time import sleep
 import asyncio
 from pylutron_caseta.smartbridge import Smartbridge
@@ -24,12 +24,12 @@ def on_button_press(channel, event):
         pass
     # Exit the program when the exit button is pressed also turns off the light
     elif channel == 4 and event == "press":
-        #explorerhat.output.one.off()
+        explorerhat.output.one.off()
         exit()
 
 
 async def main():
-	#explorerhat.output.one.on()
+    explorerhat.output.one.on()
     bridge = Smartbridge.create_tls("192.168.1.201", "caseta.key", "caseta.crt", "caseta-bridge.crt")
     await bridge.connect()
     devices =  bridge.get_devices_by_domain("light")
@@ -38,5 +38,5 @@ async def main():
     await bridge.close()
 	
 if __name__ == "__main__":
-    #asyncio.run(pair("192.168.1.201"))
+    asyncio.run(pair("192.168.1.201"))
     asyncio.run(main())
