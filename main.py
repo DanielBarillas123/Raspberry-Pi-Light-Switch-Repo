@@ -6,6 +6,7 @@ from ast import literal_eval
 from pathlib import Path
 from pylutron_caseta.smartbridge import Smartbridge
 from pylutron_caseta.pairing import async_pair
+from pylutron_caseta import BridgeDisconnectedError
 
 #This function loads the HOST variable from a .env file so no information is stored in the code. although it is a lan IP address it's just good practice.
 def load_env(path: str = ".env") -> None:
@@ -61,13 +62,30 @@ def on_button_press(channel, event):
         exit()
 
 async def turn_on_light():
-    await bridge.turn_on(device['device_id'])
+    try:
+        await bridge.turn_on(device['device_id'])
+    except BridgeDisconnectedError:
+        print("Bridge disconnected; reconnecting...")
+        await Enable_room_device()
+        await bridge.turn_on(device['device_id'])
+    except Exception as e:
+        print(f"turn_on_light error: {e}")
 
 async def turn_off_light():
-    await bridge.turn_off(device['device_id'])
+    try:
+        await bridge.turn_off(device['device_id'])
+    except BridgeDisconnectedError:
+        print("Bridge disconnected; reconnecting...")
+        await Enable_room_device()
+        await bridge.turn_off(device['device_id'])
+    except Exception as e:
+        print(f"turn_off_light error: {e}")
 
 async def close_bridge():
-    await bridge.close()
+    try:
+        await bridge.close()
+    except Exception:
+        pass
 
 async def Enable_room_device():
     # Turn on the light to indicate that the program is running
@@ -107,6 +125,12 @@ if __name__ == "__main__":
             raise
     # Run the main program to set device as the correct room light
     asyncio.run(Enable_room_device())
-    # Set up the button press event handler and keep the program running to listen for button presses
-    while True:
-        explorerhat.touch.pressed(on_button_press))
+
+    # Register the touch handler once, then keep the process alive.
+    explorerhat.touch.pressed(on_button_press)
+
+    try:
+        while True:
+            sleep(1)
+    except KeyboardInterrupt:
+        pass
