@@ -1,3 +1,5 @@
 pylutron_caseta
-explorerhat
-gpiozero
+xdg
+zeroconf
+#explorerhat
+asyncio
